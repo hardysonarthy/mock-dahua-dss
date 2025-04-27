@@ -1,0 +1,16 @@
+{
+    "config": {
+
+    },
+    "auth": {
+        "userName": "",
+        "password": ""
+    },
+    "data": {
+        "vehicles": [],
+        "entranceGroups": [],
+        "devices": [
+
+        ]
+    }
+}
