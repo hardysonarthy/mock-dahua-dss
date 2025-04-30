@@ -1,5 +1,5 @@
 const { Request, Response, NextFunction } = require('express');
-const { RxDocument } = require('rxdb');
+const { RxDocument, RxDatabaseBase } = require('rxdb');
 const { v3: uuid, v4 } = require('uuid');
 const dayjs = require('dayjs');
 const { constants } = require('node:http2');
@@ -16,7 +16,6 @@ function returnFailedAttempt() {}
  * @param {Response} res
  * @param {NextFunction} next
  */
-
 module.exports = async (req, res, next) => {
 	try {
 		if (!req.body) {
@@ -35,6 +34,9 @@ module.exports = async (req, res, next) => {
 		} = req.body;
 
 		console.info(`${req.url}: attempt by ${userName}`);
+		/**
+		 * @type {RxDatabaseBase}
+		 */
 		const db = await initDb();
 
 		const { USERNAME, PASSWORD } = process.env;
@@ -71,9 +73,6 @@ module.exports = async (req, res, next) => {
 			.findOne({
 				selector: {
 					userName,
-					createdAt: {
-						$gt: dayjs().add(-30, 'seconds').toISOString(),
-					},
 				},
 			})
 			.exec();
@@ -97,6 +96,13 @@ module.exports = async (req, res, next) => {
 			return res
 				.status(constants.HTTP_STATUS_UNAUTHORIZED)
 				.json(firstLoginAttempt);
+		}
+
+		if (
+			secondLoginAttempt.loggedInAt &&
+			dayjs(secondLoginAttempt.loggedInAt).diff(dayjs()) < 30 * 1000
+		) {
+			return res.json(wrapData({}, 'User has logged in!', 2001));
 		}
 
 		console.log(JSON.stringify(secondLoginAttempt));
@@ -140,9 +146,27 @@ module.exports = async (req, res, next) => {
 			randomKey === secondLoginAttempt.randomKey &&
 			signature === generatedSignature
 		) {
+			/*
+        TODO: generate token, credential to
+      */
+			const token = v4();
+			const credential = v4();
+			await secondLoginAttempt.update({
+				$set: {
+					token,
+					credential,
+					signature: generatedSignature,
+					nextSignature: encryption.generateMD5Hash(
+						`${generatedSignature}:${token}`,
+					),
+					loggedInAt: dayjs().toISOString(),
+					clientPublicKey: publicKey,
+					userType,
+				},
+			});
 			return res.status(200).json({
-				token: 'mock-token-abc123',
-				credential: 'mock-subject-token-xyz789',
+				token,
+				credential,
 			});
 		}
 		return res.status(401).json();

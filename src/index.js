@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const dayjs = require('dayjs');
+const path = require('node:path');
 
 const db = require('./utils/db');
 const errorHandler = require('./middlewares/errorHandler');
@@ -14,6 +16,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(express.json());
+
+app.use('/assets', express.static(path.join(__dirname, '../mock/assets')));
 
 app.use(router);
 

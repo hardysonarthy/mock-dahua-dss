@@ -2,20 +2,25 @@ const { addRxPlugin, createRxDatabase } = require('rxdb');
 const { getRxStorageMemory } = require('rxdb/plugins/storage-memory');
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { RxDBUpdatePlugin } = require('rxdb/plugins/update');
+const { RxDBJsonDumpPlugin } = require('rxdb/plugins/json-dump');
 const {
 	getAjv,
 	wrappedValidateAjvStorage,
 } = require('rxdb/plugins/validate-ajv');
 const addFormats = require('ajv-formats');
+const dayjs = require('dayjs');
 
 const { v4 } = require('uuid');
 
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBDevModePlugin);
+addRxPlugin(RxDBJsonDumpPlugin);
+
+const data = require('../../mock/data.json');
 
 const session = require('../schemas/session');
 const vehicle = require('../schemas/vehicle');
-const dayjs = require('dayjs');
+const device = require('../schemas/device');
 
 const ajv = getAjv();
 
@@ -41,7 +46,12 @@ module.exports = async function init() {
 			session: {
 				schema: session,
 			},
+			device: {
+				schema: device,
+			},
 		});
+
+		await db.vehicle.bulkInsert(data.vehicles);
 
 		db.collections.session.preInsert((docData, instance) => {
 			if (!docData.id) {
@@ -53,6 +63,19 @@ module.exports = async function init() {
 			}
 		}, false);
 	}
+
+	setInterval(async () => {
+		const expirationTime = dayjs().add(-30, 'minutes').toISOString();
+		const expiredSessions = await db.session
+			.find({
+				selector: {
+					loggedInAt: {
+						$lte: expirationTime,
+					},
+				},
+			})
+			.exec();
+	});
 
 	return db;
 };

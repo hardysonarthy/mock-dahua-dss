@@ -15,6 +15,9 @@ module.exports = {
 		signature: {
 			type: 'string',
 		},
+		nextSignature: {
+			type: 'string',
+		},
 		userName: {
 			type: 'string',
 		},
@@ -31,6 +34,15 @@ module.exports = {
 			type: 'string',
 		},
 		randomKey: {
+			type: 'string',
+		},
+		userType: {
+			type: 'string',
+		},
+		token: {
+			type: 'string',
+		},
+		credential: {
 			type: 'string',
 		},
 		createdAt: {
