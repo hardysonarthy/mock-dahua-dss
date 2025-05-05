@@ -4,7 +4,7 @@ module.exports = {
 	description: 'Schema for device summary',
 	type: 'object',
 	properties: {
-		deviceCode: { type: 'string' },
+		deviceCode: { type: 'string', maxLength: 36 },
 		deviceName: { type: 'string' },
 		deviceIp: { type: 'string', format: 'ipv4' },
 		registerIp: { type: 'string', format: 'ipv4' },

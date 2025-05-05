@@ -51,7 +51,13 @@ module.exports = async function init() {
 			},
 		});
 
-		await db.vehicle.bulkInsert(data.vehicles);
+		const { success, error } = await db.vehicle.bulkInsert(data.vehicles);
+
+		if (!error) {
+			for (const err of error) {
+				console.error(err);
+			}
+		}
 
 		db.collections.session.preInsert((docData, instance) => {
 			if (!docData.id) {

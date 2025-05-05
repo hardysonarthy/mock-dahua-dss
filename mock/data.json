@@ -42,7 +42,11 @@
         "parkingSpaceNum": "2",
         "remark": "Frequent visitor",
         "enableEntranceGroup": "1"
-      }
+      },
+      "capturePictures": [
+        "images/honda-city-malaysia.png",
+        ""
+      ]
     },
     {
       "id": "VH002",
@@ -86,7 +90,11 @@
         "parkingSpaceNum": "0",
         "remark": "Short-term contractor",
         "enableEntranceGroup": "0"
-      }
+      },
+      "capturePictures": [
+        "images/honda-city-malaysia.png",
+        ""
+      ]
     },
     {
       "id": "VH003",
@@ -130,7 +138,11 @@
         "parkingSpaceNum": "5",
         "remark": "Company executive",
         "enableEntranceGroup": "1"
-      }
+      },
+      "capturePictures": [
+        "images/honda-city-malaysia.png",
+        ""
+      ]
     },
     {
       "id": "VH004",
@@ -174,7 +186,11 @@
         "parkingSpaceNum": "0",
         "remark": "Maintenance crew",
         "enableEntranceGroup": "0"
-      }
+      },
+      "capturePictures": [
+        "images/honda-city-malaysia.png",
+        ""
+      ]
     },
     {
       "id": "VH005",
@@ -218,7 +234,11 @@
         "parkingSpaceNum": "0",
         "remark": "Guest visitor",
         "enableEntranceGroup": "1"
-      }
+      },
+      "capturePictures": [
+        "images/honda-city-malaysia.png",
+        ""
+      ]
     }
   ],
   "users": [],

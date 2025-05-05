@@ -1,24 +1,3 @@
-const entranceGroupSchema = {
-	type: 'object',
-	properties: {
-		groupId: { type: 'string' },
-		groupName: { type: 'string' },
-		groupColor: { type: 'string' },
-		level: { type: 'string' },
-		remark: { type: 'string' },
-		defaultGroup: { type: 'string' },
-		vehicleCount: { type: 'string' },
-		entryPositions: {
-			type: 'array',
-			items: {
-				type: 'object',
-				// Need EntryPositions schema too! (If you send me EntryPositions C# class, I can fill this in)
-			},
-		},
-	},
-	required: ['groupName', 'groupColor'], // C# marked these two as required
-};
-
 module.exports = {
 	title: 'vehicle',
 	version: 0,
@@ -28,72 +7,65 @@ module.exports = {
 		key: 'id',
 		fields: ['id'],
 	},
+	additionalProperties: true,
 	properties: {
-		id: {
-			type: 'string',
-			maxLength: 36,
+		id: { type: 'string', maxLength: 36 },
+		entranceStartTime: { type: 'string', pattern: '^\\d+$' },
+		entranceEndTime: { type: 'string', pattern: '^\\d+$' },
+		surveyStartTime: { type: 'string', pattern: '^\\d+$' },
+		surveyEndTime: { type: 'string', pattern: '^\\d+$' },
+		plateNo: { type: 'string' },
+		vehicleColor: { type: 'string' },
+		vehicleBrand: { type: 'string' },
+		remark: { type: 'string' },
+		entranceLongTerm: { type: 'string', enum: ['0', '1'] },
+		surveyLongTerm: { type: 'string', enum: ['0', '1'] },
+		entranceRemainingTime: { type: 'string', pattern: '^\\d+$' },
+		entranceEffectiveStatus: { type: 'string', enum: ['0', '1'] },
+		surveyRemainingTime: { type: 'string', pattern: '^\\d+$' },
+		surveyEffectiveStatus: { type: 'string', enum: ['0', '1'] },
+		entranceGroups: {
+			type: 'object',
+			properties: {
+				groupId: { type: 'string' },
+				groupName: { type: 'string' },
+				groupColor: { type: 'string' },
+				remark: { type: 'string' },
+				level: { type: 'string' },
+			},
+			required: ['groupId', 'groupName', 'groupColor'],
 		},
-		plateNo: {
-			type: 'string',
-		},
-		vehicleBrand: {
-			type: 'string',
-		},
-		vehicleColor: {
-			type: 'string',
-		},
-		remark: {
-			type: 'string',
-		},
-		entranceStartTime: {
-			type: 'string',
-		},
-		entranceEndTime: {
-			type: 'string',
-		},
-		entranceLongTerm: {
-			type: 'string',
-		},
-		surveyStartTime: {
-			type: 'string',
-		},
-		surveyEndTime: {
-			type: 'string',
-		},
-		surveyLongTerm: {
-			type: 'string',
+		surveyGroups: {
+			type: 'object',
+			properties: {
+				groupId: { type: 'string' },
+				groupName: { type: 'string' },
+				groupColor: { type: 'string' },
+				remark: { type: 'string' },
+			},
+			required: ['groupId', 'groupName', 'groupColor'],
 		},
 		personInfo: {
 			type: 'object',
 			properties: {
-				// Define fields inside PersonInfo here
-				// Example:
-				// name: { type: 'string' },
-				// idCard: { type: 'string' }
+				personId: { type: 'string' },
+				personName: { type: 'string' },
+				companyName: { type: 'string' },
+				orgCode: { type: 'string' },
+				orgName: { type: 'string' },
+				facePictures: { type: 'string', format: 'uri' },
+				email: { type: 'string', format: 'email' },
+				tel: { type: 'string', pattern: '^\\+?[0-9]+$' },
+				enableParkingSpace: { type: 'string', enum: ['0', '1'] },
+				parkingSpaceNum: { type: 'string', pattern: '^\\d+$' },
+				remark: { type: 'string' },
+				enableEntranceGroup: { type: 'string', enum: ['0', '1'] },
 			},
+			required: ['personId', 'personName', 'orgCode'],
 		},
-		entranceGroups: {
+		capturePictures: {
 			type: 'array',
-			items: entranceGroupSchema,
-		},
-		surveyGroups: {
-			type: 'array',
-			items: {
-				type: 'object',
-				// No structure given for surveyGroups, so left generic
-			},
-		},
-		entranceRemaningTime: {
-			type: 'string',
-		},
-		entranceEffectiveStatus: {
-			type: 'string',
-		},
-		surveyRemaningTime: {
-			type: 'string',
-		},
-		surveyEffectiveStatus: {
-			type: 'string',
+			items: { type: 'string' },
 		},
 	},
 	required: [

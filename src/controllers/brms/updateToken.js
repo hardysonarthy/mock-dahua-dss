@@ -14,6 +14,8 @@ const wrapPageData = require('../../utils/wrapPageData');
  */
 module.exports = async (req, res, next) => {
 	const { signature } = req.body;
+	console.info(`${req.url}: attempt signature ${signature}`);
+
 	const db = await initDb();
 	const session = await db.session
 		.findOne({

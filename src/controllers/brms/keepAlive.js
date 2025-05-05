@@ -40,6 +40,13 @@ module.exports = async (req, res, next) => {
 			.json(wrapPageData({}, 'Token Expired'));
 	}
 
+	console.info(`Updating token for ${session.token} for 15 s`);
+	await session.update({
+		$set: {
+			loggedInAt: dayjs().toISOString(),
+		},
+	});
+
 	return res.json(
 		wrapPageData(
 			{

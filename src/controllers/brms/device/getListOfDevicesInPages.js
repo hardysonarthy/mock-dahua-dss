@@ -1,4 +1,5 @@
 const { Request, Response, NextFunction } = require('express');
+const { RxDocument, RxDatabaseBase, RxCollectionBase } = require('rxdb');
 
 const initDb = require('../../../utils/db');
 /**
@@ -24,15 +25,58 @@ module.exports = async (req, res, next) => {
 
 	const query = {};
 
+	if (keyword) {
+		query.$or = [
+			{
+				deviceCode: /keyword/i,
+			},
+			{
+				deviceName: /keyword/i,
+			},
+			{
+				deviceIp: /keyword/i,
+			},
+		];
+	}
+
+	if (orgCode) {
+		query.orgCode = orgCode;
+	}
+
+	if (deviceCategory) {
+		query.deviceCategory = deviceCategory;
+	}
+
+	if (deviceType) {
+		query.deviceType = deviceType;
+	}
+
+	if (deviceType) {
+		query.deviceType = deviceType;
+	}
+
+	if (status) {
+		query.status = status;
+	}
+
+	if (domain) {
+		query.domainId = domain;
+	}
+
+	/**
+	 * @type {RxDatabaseBase}
+	 */
 	const db = await initDb();
-	db.device.find({
-		selector: {
-			$or: [
-				{
-					deviceCode: /keyword/i,
-					deviceName: keyword,
-				},
-			],
-		},
-	});
+	/**
+	 * @type {RxCollectionBase}
+	 */
+	const deviceCollection = db.device;
+	const devices = await deviceCollection
+		.find({
+			selector: query,
+		})
+		.skip((page ?? 1 - 1) * pageSize)
+		.limit(pageSize);
+
+	return res.json(devices);
 };
