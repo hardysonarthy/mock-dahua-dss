@@ -91,7 +91,7 @@ module.exports = async (req, res, next) => {
 				randomKey: firstLoginAttempt.randomKey,
 				userName,
 				serverPublicKey: firstLoginAttempt.publickey,
-				createdAt: dayjs().toISOString(),
+				createdAt: dayjs().toDate().toISOString(),
 			});
 			return res
 				.status(constants.HTTP_STATUS_UNAUTHORIZED)
@@ -159,7 +159,7 @@ module.exports = async (req, res, next) => {
 					nextSignature: encryption.generateMD5Hash(
 						`${generatedSignature}:${token}`,
 					),
-					loggedInAt: dayjs().toISOString(),
+					loggedInAt: dayjs().toDate().toISOString(),
 					clientPublicKey: publicKey,
 					userType,
 				},

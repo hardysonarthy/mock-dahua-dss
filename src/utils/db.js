@@ -3,6 +3,7 @@ const { getRxStorageMemory } = require('rxdb/plugins/storage-memory');
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { RxDBUpdatePlugin } = require('rxdb/plugins/update');
 const { RxDBJsonDumpPlugin } = require('rxdb/plugins/json-dump');
+const { RxDBQueryBuilderPlugin } = require('rxdb/plugins/query-builder');
 const {
 	getAjv,
 	wrappedValidateAjvStorage,
@@ -15,6 +16,7 @@ const { v4 } = require('uuid');
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBDevModePlugin);
 addRxPlugin(RxDBJsonDumpPlugin);
+addRxPlugin(RxDBQueryBuilderPlugin);
 
 const data = require('../../mock/data.json');
 
@@ -54,6 +56,13 @@ module.exports = async function init() {
 		const { success, error } = await db.vehicle.bulkInsert(data.vehicles);
 
 		if (!error) {
+			for (const err of error) {
+				console.error(err);
+			}
+		}
+
+		const deviceResult = await db.device.bulkInsert(data.devices);
+		if (!deviceResult.error) {
 			for (const err of error) {
 				console.error(err);
 			}

@@ -11,50 +11,57 @@ const wrapPageData = require('../../utils/wrapPageData');
  * @param {NextFunction} next
  */
 module.exports = async (req, res, next) => {
-	if (!(req.headers['X-Subject-Token'] || req.headers['x-subject-token'])) {
-		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({});
-	}
+	try {
+		if (!(req.headers['X-Subject-Token'] || req.headers['x-subject-token'])) {
+			return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({});
+		}
 
-	const token =
-		req.headers['X-Subject-Token'] ?? req.headers['x-subject-token'];
-	const db = await initDb();
+		const token =
+			req.headers['X-Subject-Token'] ?? req.headers['x-subject-token'];
+		const db = await initDb();
 
-	const session = await db.session
-		.findOne({
-			selector: {
-				token,
+		const session = await db.session
+			.findOne({
+				selector: {
+					token,
+				},
+			})
+			.exec();
+
+		if (!session) {
+			return res
+				.status(constants.HTTP_STATUS_UNAUTHORIZED)
+				.json(wrapPageData({}, 'Ineligible Token'));
+		}
+
+		const tokenDistanceTime = dayjs().diff(
+			dayjs(session.loggedInAt),
+			'seconds',
+		);
+		if (tokenDistanceTime > 30) {
+			return res
+				.status(constants.HTTP_STATUS_UNAUTHORIZED)
+				.json(wrapPageData({}, 'Token Expired'));
+		}
+
+		console.info(`Updating token for ${session.token} for 15 s`);
+		await session.update({
+			$set: {
+				loggedInAt: dayjs().toDate().toISOString(),
 			},
-		})
-		.exec();
+		});
 
-	if (!session) {
-		return res
-			.status(constants.HTTP_STATUS_UNAUTHORIZED)
-			.json(wrapPageData({}, 'Ineligible Token'));
+		return res.json(
+			wrapPageData(
+				{
+					token,
+					duration: 30,
+				},
+				'Success',
+				1000,
+			),
+		);
+	} catch (error) {
+		console.error(error.message);
 	}
-
-	const tokenDistanceTime = dayjs().diff(dayjs(session.loggedInAt), 'seconds');
-	if (tokenDistanceTime > 30) {
-		return res
-			.status(constants.HTTP_STATUS_UNAUTHORIZED)
-			.json(wrapPageData({}, 'Token Expired'));
-	}
-
-	console.info(`Updating token for ${session.token} for 15 s`);
-	await session.update({
-		$set: {
-			loggedInAt: dayjs().toISOString(),
-		},
-	});
-
-	return res.json(
-		wrapPageData(
-			{
-				token,
-				duration: 30,
-			},
-			'Success',
-			1000,
-		),
-	);
 };

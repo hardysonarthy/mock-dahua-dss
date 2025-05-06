@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 	session.update({
 		$set: {
 			token: updatedToken,
-			loggedInAt: dayjs(),
+			loggedInAt: dayjs().toISOString(),
 		},
 	});
 

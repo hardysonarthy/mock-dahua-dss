@@ -46,7 +46,7 @@ module.exports = async (req, res, next) => {
 			plateNo: vehicle.plateNo,
 			capturePictures: vehicle.capturePictures.map(
 				(path) =>
-					`${imageHostingUrl}/${path}?streamId:1260@capTime:${vehicle.entranceStartTime}`,
+					`${req.protocol}://${imageHostingUrl}/${path}?streamId:1260@capTime:${vehicle.entranceStartTime}`,
 			),
 			enterTime: vehicle.entranceStartTime,
 			parkingLotId: '1',
@@ -66,7 +66,16 @@ module.exports = async (req, res, next) => {
 		};
 	});
 
-	return res.json(wrapPageData(vehiclesData, 'Success', 1000));
+	return res.json(
+		wrapPageData(
+			{
+				totalCount: String(vehiclesData.length),
+				pageData: vehiclesData,
+			},
+			'Success',
+			1104,
+		),
+	);
 
 	// return {
 	// 	code: 1000,

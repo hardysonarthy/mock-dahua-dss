@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const dayjs = require('dayjs');
 const path = require('node:path');
 
 const db = require('./utils/db');
 const errorHandler = require('./middlewares/errorHandler');
+const trails = require('./middlewares/trails');
 
 const router = require('./routes');
 
@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use('/assets', express.static(path.join(__dirname, '../mock/assets')));
+
+app.use(trails);
 
 app.use(router);
 

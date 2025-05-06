@@ -75,8 +75,9 @@ module.exports = async (req, res, next) => {
 		.find({
 			selector: query,
 		})
-		.skip((page ?? 1 - 1) * pageSize)
-		.limit(pageSize);
+		.skip((Number(page) ?? 1 - 1) * Number(pageSize))
+		.limit(Number(pageSize))
+		.exec();
 
 	return res.json(devices);
 };
