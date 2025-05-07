@@ -23,6 +23,7 @@ const data = require('../../mock/data.json');
 const session = require('../schemas/session');
 const vehicle = require('../schemas/vehicle');
 const device = require('../schemas/device');
+const parkingLot = require('../schemas/parkingLot');
 
 const ajv = getAjv();
 
@@ -51,6 +52,9 @@ module.exports = async function init() {
 			device: {
 				schema: device,
 			},
+			parkingLot: {
+				schema: parkingLot,
+			},
 		});
 
 		const { success, error } = await db.vehicle.bulkInsert(data.vehicles);
@@ -63,6 +67,13 @@ module.exports = async function init() {
 
 		const deviceResult = await db.device.bulkInsert(data.devices);
 		if (!deviceResult.error) {
+			for (const err of error) {
+				console.error(err);
+			}
+		}
+
+		const parkingLotResult = await db.parkingLot.bulkInsert(data.parkingLots);
+		if (!parkingLotResult.error) {
 			for (const err of error) {
 				console.error(err);
 			}

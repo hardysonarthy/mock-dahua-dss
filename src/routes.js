@@ -3,32 +3,48 @@ const { Router } = require('express');
 const tokenValidation = require('./middlewares/tokenValidation');
 
 const admin = require('./controllers/admin/index');
-const brmsLogin = require('./controllers/brms/login');
-const brmsKeepAlive = require('./controllers/brms/keepAlive');
-const brmsUpdateToken = require('./controllers/brms/updateToken');
-const brmsDeviceGetListOfDevicesInPages = require('./controllers/brms/device/getListOfDevicesInPages');
-const ipmsGetVehicleEntranceExitRecords = require('./controllers/ipms/vehicle/getVehicleEntranceExitRecords');
+
+const login = require('./controllers/brms/login');
+const keepAlive = require('./controllers/brms/keepAlive');
+const updateToken = require('./controllers/brms/updateToken');
+
+const getListOfDevicesInPages = require('./controllers/brms/device/getListOfDevicesInPages');
+
+const getVehicleEntranceExitRecords = require('./controllers/ipms/vehicle/getVehicleEntranceExitRecords');
+
+const addParkingLot = require('./controllers/ipms/parkingLot/addParkingLot');
+const getParkingLots = require('./controllers/ipms/parkingLot/getListOfParkingLots');
+const updateParkingLot = require('./controllers/ipms/parkingLot/updateParkingLot');
+const deleteParkingLot = require('./controllers/ipms/parkingLot/deleteParkingLot');
 
 const router = Router();
 
-router.post('/brms/api/v1.0/accounts/authorize', brmsLogin);
-
-router.put('/brms/api/v1.0/accounts/keepalive', brmsKeepAlive);
-
-router.post('/brms/api/v1.0/accounts/updateToken', brmsUpdateToken);
-
 router.get('/admin/:collectionName', admin);
 
-router.post(
-	'/ipms/api/v1.1/entrance/vehicle-enter/record/fetch/page',
-	tokenValidation,
-	ipmsGetVehicleEntranceExitRecords,
-);
+router.post('/brms/api/v1.0/accounts/authorize', login);
+
+router.put('/brms/api/v1.0/accounts/keepalive', keepAlive);
+
+router.post('/brms/api/v1.0/accounts/updateToken', updateToken);
 
 router.get(
 	'/brms/api/v1.1/device/page',
 	tokenValidation,
-	brmsDeviceGetListOfDevicesInPages,
+	getListOfDevicesInPages,
 );
+
+router.post(
+	'/ipms/api/v1.1/entrance/vehicle-enter/record/fetch/page',
+	tokenValidation,
+	getVehicleEntranceExitRecords,
+);
+
+router.get('/ipms/api/v1.1/parking-lot/list', tokenValidation, getParkingLots);
+
+router.post('/ipms/api/v1.1/parking-lot', tokenValidation, addParkingLot);
+
+router.put('/ipms/api/v1.1/parking-lot/:id', tokenValidation, updateParkingLot);
+
+router.delete('/ipms/api/v1.1/parking-lot', tokenValidation, deleteParkingLot);
 
 module.exports = router;

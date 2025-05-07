@@ -140,7 +140,7 @@
         "enableEntranceGroup": "1"
       },
       "capturePictures": [
-        "images/honda-city-malaysia.png",
+        "images/perodua-axia-malaysia.png",
         ""
       ]
     },
@@ -188,7 +188,7 @@
         "enableEntranceGroup": "0"
       },
       "capturePictures": [
-        "images/honda-city-malaysia.png",
+        "images/perodua-myvi-malaysia.png",
         ""
       ]
     },
@@ -236,7 +236,7 @@
         "enableEntranceGroup": "1"
       },
       "capturePictures": [
-        "images/honda-city-malaysia.png",
+        "images/proton-persona-malaysia.png",
         ""
       ]
     }
@@ -765,5 +765,76 @@
         "protocolTypeName": "Protocol-3"
       }
     ]
+  ],
+  "parkingLots": [
+    {
+      "id": "1",
+      "parkingLotName": "test",
+      "enterPointCount": "1",
+      "exitPointCount": "0",
+      "bindingRemainLedCount": "0",
+      "totalParkingSpaceCount": "100",
+      "idleParkingSpaceCount": "100",
+      "issueVehicles": "1",
+      "issueStatus": "3",
+      "positions": [
+        {
+          "id": "1",
+          "positionName": "111",
+          "remark": "",
+          "enterPointCount": "0",
+          "exitPointCount": "0",
+          "points": []
+        },
+        {
+          "id": "2",
+          "positionName": "22",
+          "remark": "",
+          "enterPointCount": "1",
+          "exitPointCount": "0",
+          "points": [
+            {
+              "id": "72",
+              "pointName": "1",
+              "remark": "",
+              "bindingChannels": [
+                {
+                  "channelId": "1000002$1$0$1",
+                  "channelName": "192.168.1.1_2",
+                  "deviceCode": "1000002",
+                  "deviceName": "192.168.1.1",
+                  "channelType": "1",
+                  "status": "0"
+                },
+                {
+                  "channelId": "1000002$7$0$1",
+                  "channelName": null,
+                  "deviceCode": "1000002",
+                  "deviceName": "192.168.1.1",
+                  "channelType": "3",
+                  "status": "0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "positionName": "test1122",
+          "remark": "",
+          "enterPointCount": "0",
+          "exitPointCount": "0",
+          "points": []
+        },
+        {
+          "id": "21",
+          "positionName": "の",
+          "remark": "",
+          "enterPointCount": "0",
+          "exitPointCount": "0",
+          "points": []
+        }
+      ]
+    }
   ]
 }
